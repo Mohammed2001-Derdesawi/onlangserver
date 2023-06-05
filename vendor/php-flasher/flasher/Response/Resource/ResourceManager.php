@@ -49,18 +49,6 @@ final class ResourceManager implements ResourceManagerInterface
     }
 
     /**
-     * @param mixed $assets
-     *
-     * @return string[]|string
-     */
-    private function selectAssets($assets)
-    {
-        $use = $this->config->get('use_cdn', true) ? 'cdn' : 'local';
-
-        return is_array($assets) && array_key_exists($use, $assets) ? $assets[$use] : $assets;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function buildResponse(Response $response)
@@ -117,6 +105,18 @@ final class ResourceManager implements ResourceManagerInterface
     }
 
     /**
+     * @param mixed $assets
+     *
+     * @return string[]|string
+     */
+    private function selectAssets($assets)
+    {
+        $use = $this->config->get('use_cdn', true) ? 'cdn' : 'local';
+
+        return is_array($assets) && array_key_exists($use, $assets) ? $assets[$use] : $assets;
+    }
+
+    /**
      * @return string|null
      */
     private function resolveHandler(Envelope $envelope)
@@ -145,6 +145,11 @@ final class ResourceManager implements ResourceManagerInterface
         if ('flasher' === $theme) {
             /** @var array<string, mixed> $options */
             $options = $this->config->get('options', array());
+
+            if (isset($this->options[$handler])) {
+                $options = array_merge($this->options[$handler], $options);
+            }
+
             $this->addOptions('theme.flasher', $options);
         }
 
