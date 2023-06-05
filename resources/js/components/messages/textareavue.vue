@@ -7,9 +7,30 @@
 <script>
 export default {
   name: "textareavue",
+  props:['content'],
   mounted() {
 
-    const self = this; // capture the Vue instance
+    this.initializeTinyMCE()
+    if(this.content!="")
+    this.message=this.content
+  },
+  data() {
+    return {
+      message:'يمكنك إستعمال هذا النص كمتغير للأسماء {$name}'
+    };
+  },
+  methods: {
+    reinitializeTinyMCE() {
+      tinymce.remove("textarea.elm1"); // Remove the existing instance
+      this.initializeTinyMCE(); // Initialize a new instance
+    },
+    getUrlPicker(response) {
+      var baseUrl = window.location.protocol + "//" + window.location.host;
+      return baseUrl + "/" + response;
+    },
+
+    initializeTinyMCE(){
+      const self = this; // capture the Vue instance
     // Get the current editor instance
 
     tinymce.init({
@@ -70,18 +91,11 @@ export default {
           });
         },
     });
-  },
-  data() {
-    return {
-      message:'يمكنك إستعمال هذا النص كمتغير للأسماء {$name}'
-    };
-  },
-  methods: {
-    getUrlPicker(response) {
-      var baseUrl = window.location.protocol + "//" + window.location.host;
-      return baseUrl + "/" + response;
-    },
+    }
   },
 
 };
+
+
+
 </script>
